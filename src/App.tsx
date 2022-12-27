@@ -1,37 +1,39 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  display: flex;
-  background-color: ${(props) => props.theme.backgroundColor};
-`;
-
-const animation = keyframes`
-  0% {
-    transform: rotate(0deg);
-    border-radius:0px
-  }
-  50% {
-    transform: rotate(360deg);
-    border-radius:100px
-  }
-  100% {
-    transform: rotate(0deg);
-    border-radius:0px
-  }
-`;
-
-const Emoji = styled.span`
-  font-size: 3rem;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.textColor};
+  width: 100vw;
+  height: 100vh;
 `;
 
 function App() {
+  const [value, setValue] = useState("");
+  const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = e;
+    setValue(value);
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(e);
+    e.preventDefault();
+  };
+
   return (
     <Container>
-      <Box bgColor="tomato">
-        <Emoji as="p">😊</Emoji>
-      </Box>
-      <Emoji as="p">❤️</Emoji>
-      <Title>rwqpjrpowqjrpowqjrpowqjrpowqjropwqjpo</Title>
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          onChange={onChange}
+          value={value}
+          placeholder="username"
+        />
+        <button>Log in</button>
+      </form>
+      <h1>Helo</h1>
     </Container>
   );
 }
