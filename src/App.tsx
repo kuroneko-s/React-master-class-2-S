@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  background-color: ${(props) => props.theme.backgroundColor};
+`;
+
+const animation = keyframes`
+  0% {
+    transform: rotate(0deg);
+    border-radius:0px
+  }
+  50% {
+    transform: rotate(360deg);
+    border-radius:100px
+  }
+  100% {
+    transform: rotate(0deg);
+    border-radius:0px
+  }
+`;
+
+const Emoji = styled.span`
+  font-size: 3rem;
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Box bgColor="tomato">
+        <Emoji as="p">😊</Emoji>
+      </Box>
+      <Emoji as="p">❤️</Emoji>
+      <Title>rwqpjrpowqjrpowqjrpowqjrpowqjropwqjpo</Title>
+    </Container>
   );
 }
 
