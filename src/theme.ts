@@ -11,3 +11,9 @@ export const darkTheme: DefaultTheme = {
   bgColor: "black",
   btnColor: "red",
 };
+
+export const theme: DefaultTheme = {
+  textColor: "white",
+  bgColor: "black",
+  btnColor: "red",
+};
