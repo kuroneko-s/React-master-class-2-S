@@ -4,6 +4,11 @@ import App from "./App";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./theme";
 import { Reset } from "styled-reset";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
+// Create a client
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -11,9 +16,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      {/* <Reset /> */}
-      <App />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        {/* <Reset /> */}
+        <App />
+      </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={true} />
+    </QueryClientProvider>
   </React.StrictMode>
 );
