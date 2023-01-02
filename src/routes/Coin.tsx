@@ -1,6 +1,7 @@
 import {
   Route,
   Switch,
+  useHistory,
   useLocation,
   useParams,
   useRouteMatch,
@@ -11,6 +12,7 @@ import Chart from "./Chart";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet";
 
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
@@ -29,6 +31,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
+  position: relative;
 `;
 
 const Overview = styled.div`
@@ -72,6 +75,17 @@ const Tab = styled.span<{ isActive: boolean }>`
   a {
     display: block;
   }
+`;
+
+const Btn = styled.button`
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: none;
+  border: none;
+  color: ${(props) => props.theme.accentColor};
+  font-size: 1.5rem;
+  cursor: pointer;
 `;
 
 interface Params {
@@ -143,6 +157,10 @@ export default function Coin() {
   const { state } = useLocation<RouterState>();
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
+  const history = useHistory();
+  const backBtnHandler = () => {
+    history.goBack();
+  };
 
   const { data: infoData, isLoading: infoIsLoading } = useQuery<ICoinInfo>(
     ["coinInfo", coinId],
@@ -150,15 +168,28 @@ export default function Coin() {
   );
   const { data: tickerData, isLoading: tickerIsLoading } = useQuery<ICoinPrice>(
     ["coinTickers", coinId],
-    () => fetchCoinTickers(coinId)
+    () => fetchCoinTickers(coinId),
+    {
+      // refetchInterval: 5000,
+    }
   );
-
   const loading = infoIsLoading || tickerIsLoading;
 
   return (
     <Container>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
-        <Title>{state?.name || "Loading..."}</Title>
+        <Btn type="button" onClick={backBtnHandler}>
+          &#60;
+        </Btn>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </Title>
       </Header>
       {loading ? (
         <div>Loading...</div>
@@ -174,8 +205,8 @@ export default function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>${tickerData?.quotes.USD?.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -192,16 +223,30 @@ export default function Coin() {
 
           <Tabs>
             <Tab isActive={chartMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
+              <Link
+                to={{
+                  pathname: `/${coinId}/chart`,
+                  state: { name: infoData?.name },
+                }}
+              >
+                Chart
+              </Link>
             </Tab>
             <Tab isActive={priceMatch !== null}>
-              <Link to={`/${coinId}/price`}>Price</Link>
+              <Link
+                to={{
+                  pathname: `/${coinId}/price`,
+                  state: { name: infoData?.name },
+                }}
+              >
+                Price
+              </Link>
             </Tab>
           </Tabs>
 
           <Switch>
             <Route path={`/:coinId/price`}>
-              <Price />
+              <Price coinId={coinId} />
             </Route>
             <Route path={`/:coinId/chart`}>
               <Chart coinId={coinId} />
