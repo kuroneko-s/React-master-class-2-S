@@ -4,6 +4,7 @@ import ApexChart from "react-apexcharts";
 
 interface ChartProps {
   coinId: string;
+  isDark: boolean;
 }
 
 export interface IHistory {
@@ -17,7 +18,7 @@ export interface IHistory {
   market_cap: number;
 }
 
-export default function Chart({ coinId }: ChartProps) {
+export default function Chart({ coinId, isDark }: ChartProps) {
   const { data, isLoading } = useQuery<IHistory[]>(
     ["chart", "history", coinId],
     () => fetchCoinHistory(coinId),
@@ -41,7 +42,7 @@ export default function Chart({ coinId }: ChartProps) {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             chart: {
               height: 500,

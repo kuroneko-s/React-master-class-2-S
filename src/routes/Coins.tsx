@@ -61,7 +61,11 @@ interface CoinInterface {
   type: string;
 }
 
-export default function Coins() {
+interface ICoinsProps {
+  clickHandler: () => void;
+}
+
+export default function Coins({ clickHandler }: ICoinsProps) {
   /* const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -82,6 +86,9 @@ export default function Coins() {
       </Helmet>
       <Header>
         <Title>코인</Title>
+        <button type="button" onClick={clickHandler}>
+          Toggle MOde
+        </button>
       </Header>
       <CoinList>
         {isLoading ? (
