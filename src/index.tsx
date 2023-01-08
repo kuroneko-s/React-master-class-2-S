@@ -4,6 +4,7 @@ import App from "./App";
 import { Reset } from "styled-reset";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { RecoilRoot } from "recoil";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -14,10 +15,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      {/* <Reset /> */}
-      <App />
-      <ReactQueryDevtools initialIsOpen={true} />
-    </QueryClientProvider>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        {/* <Reset /> */}
+        <App />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </QueryClientProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );

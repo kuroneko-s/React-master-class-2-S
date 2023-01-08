@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useQuery } from "react-query";
 import { Helmet } from "react-helmet";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
@@ -61,11 +63,7 @@ interface CoinInterface {
   type: string;
 }
 
-interface ICoinsProps {
-  clickHandler: () => void;
-}
-
-export default function Coins({ clickHandler }: ICoinsProps) {
+export default function Coins() {
   /* const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -78,6 +76,7 @@ export default function Coins({ clickHandler }: ICoinsProps) {
   }, []); */
 
   const { data, isLoading } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
+  const setterFn = useSetRecoilState(isDarkAtom);
 
   return (
     <Container>
@@ -86,7 +85,7 @@ export default function Coins({ clickHandler }: ICoinsProps) {
       </Helmet>
       <Header>
         <Title>코인</Title>
-        <button type="button" onClick={clickHandler}>
+        <button type="button" onClick={() => setterFn((cur) => !cur)}>
           Toggle MOde
         </button>
       </Header>

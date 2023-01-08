@@ -152,11 +152,7 @@ interface ICoinInfo {
   last_data_at: string;
 }
 
-interface ICoinProps {
-  isDark: boolean;
-}
-
-export default function Coin({ isDark }: ICoinProps) {
+export default function Coin() {
   const { coinId } = useParams<Params>(); // route path :/coindId <<<< 요거 받아오는거 @PathValidable이랑 같은 듯?
   const { state } = useLocation<RouterState>();
   const priceMatch = useRouteMatch("/:coinId/price");
@@ -253,7 +249,7 @@ export default function Coin({ isDark }: ICoinProps) {
               <Price coinId={coinId} />
             </Route>
             <Route path={`/:coinId/chart`}>
-              <Chart coinId={coinId} isDark={isDark} />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
