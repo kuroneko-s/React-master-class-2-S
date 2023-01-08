@@ -12,7 +12,7 @@ function App() {
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle />
-        <Routgiter clickHandler={toggleDark} isDark={isDark} />
+        <Router clickHandler={toggleDark} isDark={isDark} />
       </ThemeProvider>
     </>
   );
