@@ -1,12 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { Reset } from "styled-reset";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-
-// Create a client
-const queryClient = new QueryClient();
+import { darkTheme } from "./theme";
+import { ThemeProvider } from "styled-components";
+import { RecoilRoot } from "recoil";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,10 +11,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <RecoilRoot>
       {/* <Reset /> */}
-      <App />
-      <ReactQueryDevtools initialIsOpen={true} />
-    </QueryClientProvider>
+      <ThemeProvider theme={darkTheme}>
+        <App />
+      </ThemeProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );
