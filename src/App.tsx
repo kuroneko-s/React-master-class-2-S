@@ -1,34 +1,53 @@
-import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { hourSelector, minuteState } from "./recoil";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 function App() {
-  const [minute, setMinute] = useRecoilState(minuteState);
-  const [hours, setHours] = useRecoilState(hourSelector);
-  const onMinuteChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setMinute(+event.currentTarget.value);
+  const onDragEnd = () => {
+    console.log("Hello");
   };
-  const onHourChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setHours(+e.currentTarget.value);
-  };
-  console.log(minute);
   return (
-    <div>
-      <input
-        type={"text"}
-        name="minute"
-        placeholder="분"
-        value={minute}
-        onChange={onMinuteChange}
-      />
-      <input
-        type={"text"}
-        name="hour"
-        placeholder="시간"
-        value={hours}
-        onChange={onHourChange}
-      />
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div>
+        <Droppable droppableId="1">
+          {(provided, snapshot) => (
+            <ul ref={provided.innerRef} {...provided.droppableProps}>
+              <Draggable draggableId="1" index={1}>
+                {(provided, snapshot, rubric) => (
+                  <li
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    1
+                  </li>
+                )}
+              </Draggable>
+              <Draggable draggableId="2" index={2}>
+                {(provided, snapshot, rubric) => (
+                  <li
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    2
+                  </li>
+                )}
+              </Draggable>
+              <Draggable draggableId="3" index={3}>
+                {(provided, snapshot, rubric) => (
+                  <li
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    3
+                  </li>
+                )}
+              </Draggable>
+            </ul>
+          )}
+        </Droppable>
+      </div>
+    </DragDropContext>
   );
 }
 
