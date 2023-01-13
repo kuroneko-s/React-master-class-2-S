@@ -1,45 +1,31 @@
-import { useForm } from "react-hook-form";
+import { useRecoilState, useRecoilValue } from "recoil";
+import CreateTodo from "./components/CreateTodo";
+import Todo from "./components/Todo";
+import { Categories, categoryState, todoSelector } from "./recoil";
 
 export default function ToDoList() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onValid = (data: any) => {
-    console.log(data);
+  const [category, setCategory] = useRecoilState(categoryState);
+  const todoList = useRecoilValue(todoSelector);
+  const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
+    setCategory(event.currentTarget.value as any);
   };
-  const onInValid = (data: any) => {
-    console.error(data);
-  };
-  const message = errors?.todo?.message;
-  let flag = false;
-
+  console.log(todoList);
   return (
     <div>
-      <form onSubmit={handleSubmit(onValid, onInValid)}>
-        <input
-          type={"text"}
-          placeholder="write to do"
-          {...register("todo", {
-            minLength: 5,
-            required: "is Requried",
-            pattern: {
-              value: /^[a-zA-Z]@naver.com$/,
-              message: "naver.com만 사용가능",
-            },
-          })}
-        />
-        <button type="submit">Add</button>
-      </form>
-      {!!errors?.todo ? (
-        <div>
-          <h1>{errors.todo.message?.toString()}</h1>
-        </div>
-      ) : (
-        <h1>none</h1>
-      )}
+      <h1>TO DOS</h1>
+      <hr />
+      <select onChange={onInput} value={category}>
+        <option value={Categories.TODO}>TODO</option>
+        <option value={Categories.DOING}>DOING</option>
+        <option value={Categories.DONE}>DONE</option>
+      </select>
+      <hr />
+      <CreateTodo />
+      <ul>
+        {todoList?.map((todo) => (
+          <Todo key={todo.id} {...todo} />
+        ))}
+      </ul>
     </div>
   );
 }
