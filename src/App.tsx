@@ -1,52 +1,64 @@
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { useRecoilState } from "recoil";
+
+import styled from "styled-components";
+import Board from "./components/Board";
+import { todoState } from "./recoil";
+
+const Wrapper = styled.div`
+  display: flex;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const Boards = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+`;
 
 function App() {
-  const onDragEnd = () => {
-    console.log("Hello");
+  const [todos, setTodos] = useRecoilState(todoState);
+
+  const onDragEnd = (info: DropResult) => {
+    const { source, destination } = info;
+
+    if (
+      !destination?.droppableId ||
+      (destination.droppableId === source.droppableId &&
+        destination.index === source.index)
+    )
+      return;
+
+    setTodos((cur) => {
+      let copy = { ...cur };
+
+      const movedCategory = [...copy[source.droppableId]];
+      const del = movedCategory.splice(source.index, 1);
+      copy[source.droppableId] = movedCategory;
+
+      const endCategory = [...copy[destination?.droppableId]];
+      endCategory.splice(destination.index, 0, ...del);
+      copy[destination.droppableId] = endCategory;
+
+      return copy;
+    });
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div>
-        <Droppable droppableId="1">
-          {(provided, snapshot) => (
-            <ul ref={provided.innerRef} {...provided.droppableProps}>
-              <Draggable draggableId="1" index={1}>
-                {(provided, snapshot, rubric) => (
-                  <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    1
-                  </li>
-                )}
-              </Draggable>
-              <Draggable draggableId="2" index={2}>
-                {(provided, snapshot, rubric) => (
-                  <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    2
-                  </li>
-                )}
-              </Draggable>
-              <Draggable draggableId="3" index={3}>
-                {(provided, snapshot, rubric) => (
-                  <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    3
-                  </li>
-                )}
-              </Draggable>
-            </ul>
-          )}
-        </Droppable>
-      </div>
+      <Wrapper>
+        <Boards>
+          {Object.keys(todos).map((category, idx) => (
+            <Board boardId={category} todos={todos[category]} key={category} />
+          ))}
+        </Boards>
+      </Wrapper>
     </DragDropContext>
   );
 }
